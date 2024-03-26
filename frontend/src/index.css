@@ -1,0 +1,10 @@
+.collapsed-sidebar {
+  transition: width 0.3s ease;
+}
+
+/* Adjustments for smaller sidebar */
+.collapsed-sidebar .nav-link {
+  width: 80px;
+  overflow: hidden;
+  white-space: nowrap;
+}
