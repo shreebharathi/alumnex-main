@@ -12,7 +12,7 @@ const Header = () => {
 	return (
 		<nav className="navbar navbar-dark bg-dark">
             <div className="container-fluid">
-                <span className="navbar-brand mb-0 h1">Admin Panel</span>
+                <span className="navbar-brand mb-0 h1">Alumnex</span>
                 {isAuthenticated ? (
                     <button className="btn btn-outline-light" onClick={handleLogout}>Logout</button>
                 ) : (

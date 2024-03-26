@@ -16,7 +16,7 @@ function Register() {
 		// Handle registration logic here
 		console.log("Register with:");
 		try {
-			const { data } = await axios.post(config.baseUrl + "/api/user/register", {
+			const { data } = await axios.post(config.baseUrl + "/user/register", {
 				name,
 				email,
 				password,

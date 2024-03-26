@@ -54,8 +54,23 @@ const getUser = async (req, res) => {
 	}
 };
 
+const getAllUsers = async (req, res) => {
+	try {
+		// Fetch all users without the password field
+		const users = await User.find({}).select("-password");
+		res.status(200).json(users);
+	} catch (error) {
+		res.status(500).json({ message: "Error fetching users", error: error });
+	}
+};
+
+module.exports = {
+	getAllUsers,
+};
+
 module.exports = {
 	getUser,
 	loginUser,
 	registerUser,
+	getAllUsers,
 };

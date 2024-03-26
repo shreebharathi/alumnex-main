@@ -22,7 +22,7 @@ function Login() {
 		e.preventDefault();
 
 		try {
-			const { data } = await axios.post(config.baseUrl + "/api/user/login", {
+			const { data } = await axios.post(config.baseUrl + "/user/login", {
 				email,
 				password,
 			});
@@ -33,7 +33,7 @@ function Login() {
 			});
 			navigate("/");
 		} catch (error) {
-			console.log(error);
+			
 			toast.error(error.response.data.message, {
 				position: "bottom-right",
 			});

@@ -8,3 +8,21 @@
   overflow: hidden;
   white-space: nowrap;
 }
+
+.container-fluid {
+  display: flex;
+}
+
+.row {
+  flex-grow: 1;
+}
+
+.col-md-3 {
+  width: 250px; /* Adjust sidebar width as needed */
+  background-color: #f8f9fa;
+}
+
+.col-md-9 {
+  flex-grow: 1;
+  padding: 20px; /* Adjust padding as needed */
+}
