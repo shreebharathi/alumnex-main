@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import config from "../config";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext"; // Import useAuth if you need to set authentication state
 
 function Login() {
@@ -10,11 +10,15 @@ function Login() {
 	const [password, setPassword] = useState("");
 
 	const navigate = useNavigate();
+	const location = useLocation();
+
 	const { login, isAuthenticated } = useAuth(); // If you're managing auth state
 
 	useEffect(() => {
 		if (isAuthenticated) {
-			navigate("/");
+			navigate(
+				location.state.from.pathname ? location.state.from.pathname : "/"
+			);
 		}
 	}, []);
 
@@ -26,14 +30,12 @@ function Login() {
 				email,
 				password,
 			});
-			console.log(data);
 			login(data.token);
 			toast.success(data.message, {
 				position: "bottom-right",
 			});
 			navigate("/");
 		} catch (error) {
-			
 			toast.error(error.response.data.message, {
 				position: "bottom-right",
 			});

@@ -26,6 +26,12 @@ const Users = () => {
 	const getColumns = () => {
 		const columns = [
 			{
+				Header: "User Id",
+				Footer: "User Id",
+				accessor: "_id",
+				disableFilters: true,
+			},
+			{
 				Header: "Name",
 				Footer: "Name",
 				accessor: "name",
