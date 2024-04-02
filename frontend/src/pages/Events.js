@@ -4,7 +4,7 @@ import SimpleGrid from "../components/grid/SimpleGrid";
 import config from "../config";
 import { toast } from "react-toastify";
 import moment from "moment";
-import { startCase, camelCase } from "lodash";
+import { startCase, camelCase, pick } from "lodash";
 
 const Events = () => {
 	const [isLoading, setIsLoading] = useState(false);
@@ -19,6 +19,16 @@ const Events = () => {
 		attendees: "",
 		isVirtual: false,
 	});
+	const [isEditing, setIsEditing] = useState(false);
+
+	const eventKeys = [
+		"eventTitle",
+		"eventDescription",
+		"eventVenue",
+		"eventTimestamp",
+		"organizer",
+		"attendees",
+	];
 
 	useEffect(() => {
 		fetchAllEvents();
@@ -76,6 +86,34 @@ const Events = () => {
 				disableFilters: true,
 				Cell: ({ cell: { value } }) => <>{value ? "Yes" : "No"}</>,
 			},
+			{
+				Header: "Action",
+				Footer: "Action",
+				disableFilters: true,
+				style: { maxWidth: "50px" },
+				Cell: ({ row: { original } }) => (
+					<div className="d-flex flex-row">
+						<button
+							className="btn btn-primary btn-sm"
+							onClick={() => {
+								setEventData(() => original);
+								setIsEditing(true);
+								setShowModal(true);
+							}}
+						>
+							<i class="fa fa-pencil-square-o"></i>
+						</button>
+						<button
+							className="btn btn-danger btn-sm"
+							onClick={() => {
+								handleDelete(original._id);
+							}}
+						>
+							<i class="fa fa-trash-o"></i>
+						</button>
+					</div>
+				),
+			},
 		];
 
 		return columns;
@@ -96,14 +134,14 @@ const Events = () => {
 		setEventData({ ...eventData, [name]: updatedValue });
 	};
 
-	const validateForm = () => {
+	const validateForm = (eventData) => {
 		// Check if any of the fields are empty (excluding isVirtual as it's a boolean)
-		for (const key in eventData) {
-			if (key !== "isVirtual" && !eventData[key]) {
+
+		for (const key of eventKeys) {
+			if (!eventData[key]) {
 				toast.error(`Please fill in the ${startCase(camelCase(key))}`, {
 					position: "bottom-right",
 				});
-
 				return false;
 			}
 		}
@@ -112,21 +150,20 @@ const Events = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		if (validateForm()) {
+		if (validateForm(pick(eventData, eventKeys))) {
 			try {
 				setIsLoading(true);
-				await axios.post(config.baseUrl + "/event", eventData);
+				await axios(
+					isEditing
+						? config.baseUrl + `/event/${eventData._id}`
+						: config.baseUrl + "/event",
+					{
+						data: pick(eventData, eventKeys),
+						method: isEditing ? "PATCH" : "POST",
+					}
+				);
 				fetchAllEvents();
-				setIsLoading(false)
-				setEventData({
-					eventTitle: "",
-					eventDescription: "",
-					eventVenue: "",
-					eventTimestamp: "",
-					organizer: "",
-					attendees: "",
-					isVirtual: false,
-				})
+				setIsLoading(false);
 			} catch (error) {
 				toast.error(error.response.data.message, {
 					position: "bottom-right",
@@ -134,9 +171,34 @@ const Events = () => {
 			}
 
 			setShowModal(false);
+			setIsEditing(false);
+			setEventData({
+				eventTitle: "",
+				eventDescription: "",
+				eventVenue: "",
+				eventTimestamp: "",
+				organizer: "",
+				attendees: "",
+				isVirtual: false,
+			});
 		}
 	};
 
+	const handleDelete = async (id) => {
+		try {
+			const { status } = await axios.delete(config.baseUrl + `/event/${id}`);
+			if (status === 200) {
+				toast.success("Event Deleted", {
+					position: "bottom-right",
+				});
+				fetchAllEvents();
+			}
+		} catch (error) {
+			toast.error(error.response.data.message, {
+				position: "bottom-right",
+			});
+		}
+	};
 	return (
 		<div>
 			<h3>Events</h3>
@@ -211,16 +273,7 @@ const Events = () => {
 											onChange={handleInputChange}
 										/>
 									</div>
-									<div className="form-group">
-										<label>Attendees</label>
-										<input
-											type="number"
-											className="form-control"
-											name="attendees"
-											value={eventData.attendees}
-											onChange={handleInputChange}
-										/>
-									</div>
+
 									<div className="form-group form-check">
 										<input
 											type="checkbox"
@@ -237,7 +290,18 @@ const Events = () => {
 								<button
 									type="button"
 									className="btn btn-secondary"
-									onClick={() => setShowModal(false)}
+									onClick={() => {
+										setShowModal(false);
+										setEventData({
+											eventTitle: "",
+											eventDescription: "",
+											eventVenue: "",
+											eventTimestamp: "",
+											organizer: "",
+											attendees: "",
+											isVirtual: false,
+										});
+									}}
 								>
 									Close
 								</button>

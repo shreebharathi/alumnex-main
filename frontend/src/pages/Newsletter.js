@@ -4,7 +4,7 @@ import SimpleGrid from "../components/grid/SimpleGrid";
 import config from "../config";
 import { toast } from "react-toastify";
 import moment from "moment";
-import { startCase, camelCase } from "lodash";
+import { startCase, camelCase, pick } from "lodash";
 
 const Newsletter = () => {
 	const [isLoading, setIsLoading] = useState(false);
@@ -16,6 +16,9 @@ const Newsletter = () => {
 		postedBy: "",
 		category: "",
 	});
+	const [isEditing, setIsEditing] = useState(false);
+
+	const newsletterKeys = ["title", "description", "postedBy", "category"];
 
 	useEffect(() => {
 		fetchAllNewsletters();
@@ -60,9 +63,55 @@ const Newsletter = () => {
 				disableFilters: true,
 				Cell: ({ cell: { value } }) => <>{moment(value).format("LLL")}</>,
 			},
+			{
+				Header: "Action",
+				Footer: "Action",
+				disableFilters: true,
+				style: { maxWidth: "50px" },
+				Cell: ({ row: { original } }) => (
+					<div className="d-flex flex-row">
+						<button
+							className="btn btn-primary btn-sm"
+							onClick={() => {
+								setNewsletterFormData(() => original);
+								setIsEditing(true);
+								setShowModal(true);
+							}}
+						>
+							<i class="fa fa-pencil-square-o"></i>
+						</button>
+						<button
+							className="btn btn-danger btn-sm"
+							onClick={() => {
+								handleDelete(original._id);
+							}}
+						>
+							<i class="fa fa-trash-o"></i>
+						</button>
+					</div>
+				),
+			},
 		];
 
 		return columns;
+	};
+
+	const handleDelete = async (id) => {
+		try {
+			const { status } = await axios.delete(
+				config.baseUrl + `/newsletter/${id}`
+			);
+			if (status === 200) {
+				toast.success("Newsletter Deleted", {
+					position: "bottom-right",
+				});
+				fetchAllNewsletters();
+			}
+		} catch (error) {
+			toast.error(error.response.data.message, {
+				position: "bottom-right",
+			});
+		}
 	};
 
 	const getToolbarItems = () => {
@@ -80,9 +129,9 @@ const Newsletter = () => {
 		setNewsletterFormData({ ...newsletterFormData, [name]: value });
 	};
 
-	const validateForm = () => {
-		for (const key in newsletterFormData) {
-			if (newsletterFormData.hasOwnProperty(key) && !newsletterFormData[key]) {
+	const validateForm = (newsletterData) => {
+		for (const key in newsletterKeys) {
+			if (newsletterData.hasOwnProperty(key) && !newsletterData[key]) {
 				toast.error(`Please fill in the ${startCase(camelCase(key))}`, {
 					position: "bottom-right",
 				});
@@ -95,17 +144,20 @@ const Newsletter = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		if (validateForm()) {
+		if (validateForm(pick(newsletterFormData, newsletterKeys))) {
 			try {
 				setIsLoading(true);
-				await axios.post(config.baseUrl + "/newsletter", newsletterFormData);
+				await axios(
+					isEditing
+						? config.baseUrl + `/newsletter/${newsletterFormData._id}`
+						: config.baseUrl + "/newsletter",
+					{
+						data: pick(newsletterFormData, newsletterKeys),
+						method: isEditing ? "PATCH" : "POST",
+					}
+				);
 				fetchAllNewsletters();
-				setNewsletterFormData({
-					title: "",
-					description: "",
-					postedBy: "",
-					category: "",
-				});
+
 				setIsLoading(false);
 			} catch (error) {
 				toast.error(error.message, {
@@ -113,6 +165,12 @@ const Newsletter = () => {
 				});
 			}
 			setShowModal(false);
+			setNewsletterFormData({
+				title: "",
+				description: "",
+				postedBy: "",
+				category: "",
+			});
 		}
 	};
 
@@ -190,7 +248,15 @@ const Newsletter = () => {
 								<button
 									type="button"
 									className="btn btn-secondary"
-									onClick={() => setShowModal(false)}
+									onClick={() => {
+										setShowModal(false);
+										setNewsletterFormData({
+											title: "",
+											description: "",
+											postedBy: "",
+											category: "",
+										});
+									}}
 								>
 									Close
 								</button>

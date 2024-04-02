@@ -4,23 +4,36 @@ import SimpleGrid from "../components/grid/SimpleGrid";
 import config from "../config";
 import { toast } from "react-toastify";
 import moment from "moment";
-import { startCase, camelCase } from "lodash";
+import { startCase, camelCase, pick } from "lodash";
 
 const Internships = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [internshipsData, setInternshipsData] = useState([]);
 	const [showModal, setShowModal] = useState(false);
-    const [internshipData, setInternshipData] = useState({
-        title: '',
-        description: '',
-        companyName: '',
-        companyDescription: '',
-        postedBy: '',
-        location: '',
-        duration: '',
-        stipend: 0,
-        applicationDeadline: ''
-    });
+	const [internshipData, setInternshipData] = useState({
+		title: "",
+		description: "",
+		companyName: "",
+		companyDescription: "",
+		postedBy: "",
+		location: "",
+		duration: "",
+		stipend: 0,
+		applicationDeadline: "",
+	});
+	const [isEditing, setIsEditing] = useState(false);
+
+	const internshipKeys = [
+		"title",
+		"description",
+		"companyName",
+		"companyDescription",
+		"postedBy",
+		"location",
+		"duration",
+		"stipend",
+		"applicationDeadline",
+	];
 
 	useEffect(() => {
 		fetchAllInternships();
@@ -31,6 +44,24 @@ const Internships = () => {
 			setIsLoading(true);
 			const { data } = await axios.get(config.baseUrl + "/internship/all");
 			setInternshipsData(data);
+		} catch (error) {
+			toast.error(error.response.data.message, {
+				position: "bottom-right",
+			});
+		}
+	};
+
+	const handleDelete = async (id) => {
+		try {
+			const { status } = await axios.delete(
+				config.baseUrl + `/internship/${id}`
+			);
+			if (status === 200) {
+				toast.success("Internship Deleted", {
+					position: "bottom-right",
+				});
+				fetchAllInternships();
+			}
 		} catch (error) {
 			toast.error(error.response.data.message, {
 				position: "bottom-right",
@@ -89,6 +120,34 @@ const Internships = () => {
 				disableFilters: true,
 				Cell: ({ cell: { value } }) => <>{moment(value).format("LLL")}</>,
 			},
+			{
+				Header: "Action",
+				Footer: "Action",
+				disableFilters: true,
+				style: { maxWidth: "50px" },
+				Cell: ({ row: { original } }) => (
+					<div className="d-flex flex-row">
+						<button
+							className="btn btn-primary btn-sm"
+							onClick={() => {
+								setInternshipData(() => original);
+								setIsEditing(true);
+								setShowModal(true);
+							}}
+						>
+							<i class="fa fa-pencil-square-o"></i>
+						</button>
+						<button
+							className="btn btn-danger btn-sm"
+							onClick={() => {
+								handleDelete(original._id);
+							}}
+						>
+							<i class="fa fa-trash-o"></i>
+						</button>
+					</div>
+				),
+			},
 		];
 
 		return columns;
@@ -104,51 +163,63 @@ const Internships = () => {
 		);
 	};
 	const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setInternshipData({ ...internshipData, [name]: value });
-    };
+		const { name, value } = e.target;
+		setInternshipData({ ...internshipData, [name]: value });
+	};
 
-    const validateForm = () => {
-        for (const key in internshipData) {
-            if (internshipData.hasOwnProperty(key) && !internshipData[key] && key !== 'stipend') {
-                console.log(`Please fill in the ${key}`);toast.error(`Please fill in the ${startCase(camelCase(key))}`, {
+	const validateForm = (internshipData) => {
+		for (const key in internshipKeys) {
+			if (
+				internshipData.hasOwnProperty(key) &&
+				!internshipData[key] &&
+				key !== "stipend"
+			) {
+				console.log(`Please fill in the ${key}`);
+				toast.error(`Please fill in the ${startCase(camelCase(key))}`, {
 					position: "bottom-right",
 				});
 
-                return false;
-            }
-        }
-        return true;
-    };
+				return false;
+			}
+		}
+		return true;
+	};
 
-    const handleSubmit = async(e) => {
-        e.preventDefault();
-        if (validateForm()) {
-            try {
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		if (validateForm(pick(internshipData, internshipKeys))) {
+			try {
 				setIsLoading(true);
-				await axios.post(config.baseUrl + "/internship", internshipData);
+				await axios(
+					isEditing
+						? config.baseUrl + `/internship/${internshipData._id}`
+						: config.baseUrl + "/internship",
+					{
+						data: pick(internshipData, internshipKeys),
+						method: isEditing ? "PATCH" : "POST",
+					}
+				);
 				fetchAllInternships();
-				setInternshipData({
-					title: '',
-					description: '',
-					companyName: '',
-					companyDescription: '',
-					postedBy: '',
-					location: '',
-					duration: '',
-					stipend: 0,
-					applicationDeadline: ''
-				});
 				setIsLoading(false);
 			} catch (error) {
 				toast.error(error.message, {
 					position: "bottom-right",
 				});
 			}
-            setShowModal(false);
-          
-        }
-    };
+			setShowModal(false);
+			setInternshipData({
+				title: "",
+				description: "",
+				companyName: "",
+				companyDescription: "",
+				postedBy: "",
+				location: "",
+				duration: "",
+				stipend: 0,
+				applicationDeadline: "",
+			});
+		}
+	};
 
 	return (
 		<div>
@@ -165,11 +236,13 @@ const Internships = () => {
 
 			{showModal && (
 				<div className="modal show d-block" tabIndex="-1" role="dialog">
-					<div className="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+					<div
+						className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+						role="document"
+					>
 						<div className="modal-content">
 							<div className="modal-header">
 								<h5 className="modal-title">Create Internship</h5>
-								
 							</div>
 							<div className="modal-body">
 								<form onSubmit={handleSubmit}>
@@ -276,7 +349,18 @@ const Internships = () => {
 								<button
 									type="button"
 									className="btn btn-secondary"
-									onClick={() => setShowModal(false)}
+									onClick={() => {
+										setShowModal(false);
+										setInternshipData({
+											eventTitle: "",
+											eventDescription: "",
+											eventVenue: "",
+											eventTimestamp: "",
+											organizer: "",
+											attendees: "",
+											isVirtual: false,
+										});
+									}}
 								>
 									Close
 								</button>
