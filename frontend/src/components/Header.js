@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 const Header = () => {
 	const { isAuthenticated, logout } = useAuth(); // Get isAuthenticated and logout from AuthContext
+	const role = localStorage.getItem("role");
 
 	const handleLogout = () => {
 		logout(); // Call the logout function from AuthContext
@@ -16,9 +17,11 @@ const Header = () => {
 
 				{isAuthenticated ? (
 					<div>
-						<Link to="/admin/dashboard" className="btn btn-outline-light">
-							Admin
-						</Link>
+						{role !== "Student" && (
+							<Link to="/admin/dashboard" className="btn btn-outline-light">
+								Admin
+							</Link>
+						)}
 						<button className="btn btn-outline-light" onClick={handleLogout}>
 							Logout
 						</button>

@@ -38,6 +38,7 @@ export const AuthProvider = ({ children }) => {
 		const token = localStorage.getItem("token");
 		if (token) {
 			const decodedToken = jwtDecode(token);
+
 			const currentTime = Date.now() / 1000;
 
 			// Check if the token is expired
@@ -53,11 +54,14 @@ export const AuthProvider = ({ children }) => {
 
 	const login = (token) => {
 		localStorage.setItem("token", token);
+		const decodedToken = jwtDecode(token);
+		localStorage.setItem("role", decodedToken.role);
 		setIsAuthenticated(true);
 	};
 
 	const logout = () => {
 		localStorage.removeItem("token");
+		localStorage.removeItem("role");
 		setIsAuthenticated(false);
 	};
 

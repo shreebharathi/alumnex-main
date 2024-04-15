@@ -15,6 +15,8 @@ import Internships from "./pages/Internships";
 import Dashboard from "./pages/Dashboard";
 
 function App() {
+	const role = localStorage.getItem("role");
+
 	return (
 		<AuthProvider>
 			<Router>
@@ -34,48 +36,63 @@ function App() {
 								}
 							/>
 
-							<Route path="admin">
+							{["Admin", "Alumni", "Staff"].includes(role) && (
+								<Route path="admin">
+									<Route
+										path="dashboard"
+										element={
+											<PrivateRoute>
+												<Dashboard />
+											</PrivateRoute>
+										}
+									/>
+									{["Admin", "Staff"].includes(role) && (
+										<>
+											<Route
+												path="users"
+												element={
+													<PrivateRoute>
+														<Users />
+													</PrivateRoute>
+												}
+											/>
+											<Route
+												path="events"
+												element={
+													<PrivateRoute>
+														<Events />
+													</PrivateRoute>
+												}
+											/>
+											<Route
+												path="newsletters"
+												element={
+													<PrivateRoute>
+														<Newsletter />
+													</PrivateRoute>
+												}
+											/>
+										</>
+									)}
+
+									<Route
+										path="internships"
+										element={
+											<PrivateRoute>
+												<Internships />
+											</PrivateRoute>
+										}
+									/>
+								</Route>
+							)}
 							<Route
-									path="dashboard"
-									element={
-										<PrivateRoute>
-											<Dashboard />
-										</PrivateRoute>
-									}
-								/>
-								<Route
-									path="users"
-									element={
-										<PrivateRoute>
-											<Users />
-										</PrivateRoute>
-									}
-								/>
-								<Route
-									path="events"
-									element={
-										<PrivateRoute>
-											<Events />
-										</PrivateRoute>
-									}
-								/>
-								<Route
-									path="newsletters"
-									element={
-										<PrivateRoute>
-											<Newsletter />
-										</PrivateRoute>
-									}
-								/>
-								<Route
-									path="internships"
-									element={
-										<PrivateRoute>
-											<Internships />
-										</PrivateRoute>
-									}
-								/>
-							</Route>
+								path="*"
+								element={
+									<PrivateRoute>
+										<></>
+									</PrivateRoute>
+								}
+							/>
 						</Routes>
 					</div>
 				</div>

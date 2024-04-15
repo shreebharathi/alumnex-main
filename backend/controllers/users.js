@@ -7,6 +7,7 @@ const registerUser = async (req, res) => {
 		phone: req.body.phone,
 		email: req.body.email,
 		password: req.body.password,
+		role: req.body.role,
 	});
 
 	try {
@@ -24,9 +25,13 @@ const loginUser = async (req, res) => {
 			const isMatch = await user.comparePassword(req.body.password);
 			if (isMatch) {
 				// Generate a JWT token that expires in 48 hours
-				const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-					expiresIn: "48h",
-				});
+				const token = jwt.sign(
+					{ userId: user._id, role: user.role },
+					process.env.JWT_SECRET,
+					{
+						expiresIn: "48h",
+					}
+				);
 
 				// Send the token along with the successful login response
 				res.status(200).json({

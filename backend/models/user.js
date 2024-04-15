@@ -6,11 +6,10 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	role:{
+	role: {
 		type: String,
-		required:true,
-		default: 'Student',
-		
+		required: true,
+		default: "Student",
 	},
 	email: {
 		type: String,
@@ -33,7 +32,6 @@ const userSchema = new mongoose.Schema({
 
 userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ phone: 1 }, { unique: true });
-
 
 // Pre-save hook to hash password before saving it to the database
 userSchema.pre("save", async function (next) {
