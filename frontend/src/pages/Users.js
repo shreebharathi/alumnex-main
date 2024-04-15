@@ -38,6 +38,12 @@ const Users = () => {
 				disableFilters: true,
 			},
 			{
+				Header: "Role",
+				Footer: "Role",
+				accessor: "role",
+				disableFilters: true,
+			},
+			{
 				Header: "Email",
 				Footer: "Email",
 				accessor: "email",

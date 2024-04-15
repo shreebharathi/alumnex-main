@@ -5,6 +5,7 @@ import config from "../config";
 import { toast } from "react-toastify";
 import moment from "moment";
 import { startCase, camelCase, pick } from "lodash";
+import "./Newsletter.css";
 
 const Newsletter = () => {
 	const [isLoading, setIsLoading] = useState(false);
@@ -67,9 +68,9 @@ const Newsletter = () => {
 				Header: "Action",
 				Footer: "Action",
 				disableFilters: true,
-				style: { maxWidth: "50px" },
+				style: { maxWidth: "100px" },
 				Cell: ({ row: { original } }) => (
-					<div className="d-flex flex-row">
+					<div className="d-flex flex-row justify-content-around">
 						<button
 							className="btn btn-primary btn-sm"
 							onClick={() => {
@@ -175,7 +176,7 @@ const Newsletter = () => {
 	};
 
 	return (
-		<div>
+		<div className="news-container">
 			<h3>Newsletter</h3>
 
 			<SimpleGrid
@@ -213,6 +214,7 @@ const Newsletter = () => {
 									<div className="form-group">
 										<label>Description</label>
 										<textarea
+											type="text"
 											className="form-control"
 											name="description"
 											value={newsletterFormData.description}
