@@ -63,6 +63,7 @@ export const AuthProvider = ({ children }) => {
 		localStorage.removeItem("token");
 		localStorage.removeItem("role");
 		setIsAuthenticated(false);
+		window.location.reload();
 	};
 
 	return (
