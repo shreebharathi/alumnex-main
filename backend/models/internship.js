@@ -51,7 +51,18 @@ const internshipSchema = new mongoose.Schema({
     applicationDeadline: {
         type: Date,
         required: false, // Deadline for application (optional)
-    }
+    },
+    applyLink: {
+        type: String,
+        required: true,
+        trim: true,
+        // validate: {
+        //     validator: function(v) {
+        //         return validator.isURL(v); // Validate if the string is a valid URL
+        //     },
+        //     message: props => `${props.value} is not a valid URL!`
+        // }
+    },
 });
 
 // Indexes for better query performance

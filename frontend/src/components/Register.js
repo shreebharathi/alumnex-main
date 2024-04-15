@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 function Register() {
 	const [name, setName] = useState("");
+	const [role, setRole] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [phone, setPhone] = useState("");
@@ -18,6 +19,7 @@ function Register() {
 		try {
 			const { data } = await axios.post(config.baseUrl + "/user/register", {
 				name,
+				role,
 				email,
 				password,
 				phone,
@@ -50,6 +52,19 @@ function Register() {
 						onChange={(e) => setName(e.target.value)}
 					/>
 				</div>
+				<div className="mb-3">
+                <label htmlFor="role" className="form-label">Role</label>
+                <select
+                    id="role"
+                    className="form-control"
+                    value={role}
+                    onChange={(e) => setRole(e.target.value)}
+                >
+                    <option value="Alumni">Alumni</option>
+                    <option value="Student">Student</option>
+                    <option value="Staff">Faculty</option>
+                </select>
+            </div>
 				<div className="mb-3">
 					<label htmlFor="email" className="form-label">
 						Email address

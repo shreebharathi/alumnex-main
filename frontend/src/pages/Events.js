@@ -5,6 +5,7 @@ import config from "../config";
 import { toast } from "react-toastify";
 import moment from "moment";
 import { startCase, camelCase, pick } from "lodash";
+import "./Events.css";
 
 const Events = () => {
 	const [isLoading, setIsLoading] = useState(false);
@@ -90,9 +91,9 @@ const Events = () => {
 				Header: "Action",
 				Footer: "Action",
 				disableFilters: true,
-				style: { maxWidth: "50px" },
+				style: { maxWidth: "100px" },
 				Cell: ({ row: { original } }) => (
-					<div className="d-flex flex-row">
+					<div className="d-flex flex-row justify-content-around">
 						<button
 							className="btn btn-primary btn-sm"
 							onClick={() => {
@@ -200,125 +201,48 @@ const Events = () => {
 		}
 	};
 	return (
-		<div>
-			<h3>Events</h3>
-
-			<SimpleGrid
-				globalSearch={true}
-				tableFooter={false}
-				tableData={eventsData}
-				tableColumns={getColumns()}
-				isLoading={isLoading}
-				toolBarItems={getToolbarItems()}
-			/>
-
-			{showModal && (
-				<div className="modal show d-block" tabIndex="-1" role="dialog">
-					<div
-						className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
-						role="document"
-					>
-						<div className="modal-content">
-							<div className="modal-header">
-								<h5 className="modal-title">Create Event</h5>
-							</div>
-							<div className="modal-body">
-								<form onSubmit={handleSubmit}>
-									<div className="form-group">
-										<label>Event Title</label>
-										<input
-											type="text"
-											className="form-control"
-											name="eventTitle"
-											value={eventData.eventTitle}
-											onChange={handleInputChange}
-										/>
-									</div>
-									<div className="form-group">
-										<label>Event Description</label>
-										<textarea
-											className="form-control"
-											name="eventDescription"
-											value={eventData.eventDescription}
-											onChange={handleInputChange}
-										/>
-									</div>
-									<div className="form-group">
-										<label>Event Venue</label>
-										<input
-											type="text"
-											className="form-control"
-											name="eventVenue"
-											value={eventData.eventVenue}
-											onChange={handleInputChange}
-										/>
-									</div>
-									<div className="form-group">
-										<label>Event Timestamp</label>
-										<input
-											type="datetime-local"
-											className="form-control"
-											name="eventTimestamp"
-											value={eventData.eventTimestamp}
-											onChange={handleInputChange}
-										/>
-									</div>
-									<div className="form-group">
-										<label>Organizer</label>
-										<input
-											type="text"
-											className="form-control"
-											name="organizer"
-											value={eventData.organizer}
-											onChange={handleInputChange}
-										/>
-									</div>
-
-									<div className="form-group form-check">
-										<input
-											type="checkbox"
-											className="form-check-input"
-											name="isVirtual"
-											checked={eventData.isVirtual}
-											onChange={handleInputChange}
-										/>
-										<label className="form-check-label">Is Virtual</label>
-									</div>
-								</form>
-							</div>
-							<div className="modal-footer">
-								<button
-									type="button"
-									className="btn btn-secondary"
-									onClick={() => {
-										setShowModal(false);
-										setEventData({
-											eventTitle: "",
-											eventDescription: "",
-											eventVenue: "",
-											eventTimestamp: "",
-											organizer: "",
-											attendees: "",
-											isVirtual: false,
-										});
-									}}
-								>
-									Close
-								</button>
-								<button
-									type="button"
-									className="btn btn-primary"
-									onClick={handleSubmit}
-								>
-									Save Event
-								</button>
-							</div>
-						</div>
-					</div>
+		<div className="events-container">
+		  <h3>Events</h3>
+		  <SimpleGrid
+			globalSearch={true}
+			tableFooter={false}
+			tableData={eventsData}
+			tableColumns={getColumns()}
+			isLoading={isLoading}
+			toolBarItems={getToolbarItems()}
+		  />
+	
+		  {showModal && (
+			<div className="modal-wrapper">
+			  <div className="modal">
+				<div className="modal-header">
+				  <h5 className="modal-title">Create Event</h5>
+				  <button
+					className="close-button"
+					onClick={() => setShowModal(false)}
+				  >
+					&times;
+				  </button>
 				</div>
-			)}
+				<div className="modal-body">
+				  <form onSubmit={handleSubmit}>
+					{/* Your form inputs here */}
+				  </form>
+				</div>
+				<div className="modal-footer">
+				  <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
+					Close
+				  </button>
+				  <button className="btn btn-primary" onClick={handleSubmit}>
+					Save Event
+				  </button>
+				</div>
+			  </div>
+			</div>
+		  )}
 		</div>
-	);
-};
-
-export default Events;
+	  );
+	};
+	
+	export default Events;
+	

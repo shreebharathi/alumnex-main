@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import config from "../config";
 import { toast } from "react-toastify";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext"; // Import useAuth if you need to set authentication state
 
 function Login() {
@@ -73,6 +73,7 @@ function Login() {
 				<button type="submit" className="btn btn-primary">
 					Login
 				</button>
+				<Link to="/register" className="btn btn-primary">Register</Link> {/* Changed to Link */}
 			</form>
 		</div>
 	);

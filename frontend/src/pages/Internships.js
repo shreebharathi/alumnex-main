@@ -5,6 +5,7 @@ import config from "../config";
 import { toast } from "react-toastify";
 import moment from "moment";
 import { startCase, camelCase, pick } from "lodash";
+import "./Internship.css";
 
 const Internships = () => {
 	const [isLoading, setIsLoading] = useState(false);
@@ -20,6 +21,7 @@ const Internships = () => {
 		duration: "",
 		stipend: 0,
 		applicationDeadline: "",
+		applyLink:"",
 	});
 	const [isEditing, setIsEditing] = useState(false);
 
@@ -33,6 +35,7 @@ const Internships = () => {
 		"duration",
 		"stipend",
 		"applicationDeadline",
+		"applyLink",
 	];
 
 	useEffect(() => {
@@ -121,12 +124,25 @@ const Internships = () => {
 				Cell: ({ cell: { value } }) => <>{moment(value).format("LLL")}</>,
 			},
 			{
+
+					Header: "Link",
+					Footer: "Link",
+					accessor: "applyLink",
+					disableFilters: true,
+					style:{maxWidth: "200px"},
+					Cell: ({ row }) => (
+					  <a href={row.original.applyLink} target="_blank" rel="noopener noreferrer">
+						{row.original.applyLink}
+					  </a>
+					)
+				  },
+			{
 				Header: "Action",
 				Footer: "Action",
 				disableFilters: true,
-				style: { maxWidth: "50px" },
+				style: { maxWidth: "100px" },
 				Cell: ({ row: { original } }) => (
-					<div className="d-flex flex-row">
+					<div className="d-flex flex-row justify-content-around">
 						<button
 							className="btn btn-primary btn-sm"
 							onClick={() => {
@@ -217,12 +233,13 @@ const Internships = () => {
 				duration: "",
 				stipend: 0,
 				applicationDeadline: "",
+				applyLink:"",
 			});
 		}
 	};
 
 	return (
-		<div>
+		<div className="intern-container">
 			<h3>Internships</h3>
 
 			<SimpleGrid
@@ -342,7 +359,19 @@ const Internships = () => {
 											onChange={handleInputChange}
 											required
 										/>
+										</div>
+										<div className="form-group">
+										<label>Application Link</label>
+										<input
+											type="url"
+											className="form-control"
+											name="applyLink"
+											value={internshipData.applyLink}
+											onChange={handleInputChange}
+											required
+										/>
 									</div>
+
 								</form>
 							</div>
 							<div className="modal-footer">
