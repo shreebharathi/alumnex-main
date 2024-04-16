@@ -52,8 +52,20 @@ const loginUser = async (req, res) => {
 
 const getUser = async (req, res) => {
 	try {
-		const examples = await User.find();
+		const examples = await User.find({_id:req.params.id}).select("-password");
 		res.json(examples);
+	} catch (err) {
+		res.status(500).json({ message: err.message });
+	}
+};
+
+const updateUser = async (req, res) => {
+	try {
+		const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+			new: true,
+			runValidators: true,
+		});
+		res.json(user);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
@@ -70,12 +82,9 @@ const getAllUsers = async (req, res) => {
 };
 
 module.exports = {
-	getAllUsers,
-};
-
-module.exports = {
 	getUser,
 	loginUser,
 	registerUser,
 	getAllUsers,
+	updateUser,
 };

@@ -13,6 +13,7 @@ import Events from "./pages/Events";
 import Newsletter from "./pages/Newsletter";
 import Internships from "./pages/Internships";
 import Dashboard from "./pages/Dashboard";
+import Home from "./pages/Home";
 
 function App() {
 	const role = localStorage.getItem("role");
@@ -31,7 +32,7 @@ function App() {
 								path="/"
 								element={
 									<PrivateRoute noSidebar={true}>
-										<>Home Page</>
+										<Home />
 									</PrivateRoute>
 								}
 							/>
