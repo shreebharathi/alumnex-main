@@ -10,8 +10,8 @@ import config from "../config";
 const Header = () => {
 	const { isAuthenticated, logout } = useAuth(); // Get isAuthenticated and logout from AuthContext
 	const [userProfile, setUserProfile] = useState();
-
-	const decoded = jwtDecode(localStorage.getItem("token"));
+ const token = localStorage.getItem("token")
+	const decoded = jwtDecode(token? token : "");
 
 	useEffect(() => {
 		fetchUserProfile();
@@ -20,7 +20,7 @@ const Header = () => {
 	const fetchUserProfile = async () => {
 		try {
 			const { data } = await axios.get(
-				config.baseUrl + `/user/profile/${decoded.userId}`
+				config.baseUrl + `/user/profile/${decoded?.userId}`
 			);
 			setUserProfile(() => (data.length ? data[0] : {}));
 		} catch (error) {
