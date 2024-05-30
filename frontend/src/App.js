@@ -39,7 +39,7 @@ function App() {
 
 							{["Admin"].includes(role) && (
 								<Route path="admin">
-									{["Student"].includes(role) && (
+									{["Student", "Admin"].includes(role) && (
 										<Route
 											path="dashboard"
 											element={
@@ -59,7 +59,7 @@ function App() {
 											}
 										/>
 									)}
-									{["User"].includes(role) && (
+									{["User", "Admin"].includes(role) && (
 										<Route
 											path="users"
 											element={
