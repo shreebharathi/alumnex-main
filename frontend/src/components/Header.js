@@ -8,6 +8,7 @@ import axios from "axios";
 import config from "../config";
 
 const Header = () => {
+<<<<<<< HEAD
     const { isAuthenticated, logout } = useAuth();
     const [userProfile, setUserProfile] = useState(null);
 
@@ -23,6 +24,12 @@ const Header = () => {
             }
         }
     }, [isAuthenticated]);
+=======
+	const { isAuthenticated, logout } = useAuth(); // Get isAuthenticated and logout from AuthContext
+	const [userProfile, setUserProfile] = useState();
+ const token = localStorage.getItem("token")
+	const decoded = jwtDecode(token? token : "");
+>>>>>>> fabd43edd925241250c7fc7da57368c9f7c5b2ab
 
     const fetchUserProfile = async (userId) => {
         try {
@@ -36,9 +43,35 @@ const Header = () => {
         }
     };
 
+<<<<<<< HEAD
     const handleLogout = () => {
         logout(); // Potentially clear the token from localStorage here as well
     };
+=======
+	const fetchUserProfile = async () => {
+		try {
+			const { data } = await axios.get(
+				config.baseUrl + `/user/profile/${decoded?.userId}`
+			);
+			setUserProfile(() => (data.length ? data[0] : {}));
+		} catch (error) {
+			toast.error(error.response.data.message, {
+				position: "bottom-right",
+			});
+		}
+	};
+	console.log(userProfile);
+	const handleLogout = () => {
+		logout(); // Call the logout function from AuthContext
+		// Optionally, redirect the user to the login page or perform other actions after logout
+	};
+	return (
+		<nav className="navbar navbar-dark bg-dark">
+			<div className="container-fluid">
+				<Link to="/" className="navbar-brand mb-0 h1">
+					Alumnex
+				</Link>
+>>>>>>> fabd43edd925241250c7fc7da57368c9f7c5b2ab
 
     return (
         <nav className="navbar navbar-dark bg-dark">
