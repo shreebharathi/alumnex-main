@@ -15,7 +15,6 @@ import Internships from "./pages/Internships";
 import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 
-
 function App() {
 	const role = localStorage.getItem("role");
 
@@ -38,34 +37,40 @@ function App() {
 								}
 							/>
 
-							{["Admin", "Alumni", "Staff"].includes(role) && (
+							{["Admin"].includes(role) && (
 								<Route path="admin">
-									<Route
-										path="dashboard"
-										element={
-											<PrivateRoute>
-												<Dashboard />
-											</PrivateRoute>
-										}
-									/>
-									{["Admin", "Staff"].includes(role) && (
+									{["Student"].includes(role) && (
+										<Route
+											path="dashboard"
+											element={
+												<PrivateRoute>
+													<Dashboard />
+												</PrivateRoute>
+											}
+										/>
+									)}
+									{["Admin", "Student"].includes(role) && (
+										<Route
+											path="events"
+											element={
+												<PrivateRoute>
+													<Events />
+												</PrivateRoute>
+											}
+										/>
+									)}
+									{["User"].includes(role) && (
+										<Route
+											path="users"
+											element={
+												<PrivateRoute>
+													<Users />
+												</PrivateRoute>
+											}
+										/>
+									)}
+									{["Admin", "Staff", "Alumni"].includes(role) && (
 										<>
-											<Route
-												path="users"
-												element={
-													<PrivateRoute>
-														<Users />
-													</PrivateRoute>
-												}
-											/>
-											<Route
-												path="events"
-												element={
-													<PrivateRoute>
-														<Events />
-													</PrivateRoute>
-												}
-											/>
 											<Route
 												path="newsletters"
 												element={
