@@ -74,7 +74,7 @@ const Users = () => {
 				Cell: ({ row: { original } }) => (
 					<div className="d-flex flex-row justify-content-around">
 						<button
-							className="btn btn-primary btn-sm"
+							className="btn btn-primary btn"
 							onClick={() => {
 								setEditData(()=> original)
 								setShowModal(true);

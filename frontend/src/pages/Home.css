@@ -1,0 +1,24 @@
+.cover-container {
+    background: url('./bg.jpg') no-repeat center center;
+    background-size: cover;
+    margin-top: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Aligns vertically */
+    align-items: center; /* Aligns horizontally */
+    text-align: center; /* Centers text within the div */
+    height: 100vh; /* Takes at least the full height of the viewport */
+  }
+  
+  .center-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Starts content at the beginning of the container */
+    align-items: center;
+    text-decoration: wavy;
+    text-shadow: 5px;
+    text-decoration: bold;
+    width: 100%; /* Ensures the content uses all available horizontal space */
+    padding-top: 5%; /* Adjust this value to control how far from the top the content starts */
+  }

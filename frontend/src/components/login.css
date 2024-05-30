@@ -1,11 +1,11 @@
-.container {
-    
+.container mb-3 {
     max-width: 400px;
     margin: 0 auto;
     padding: 80px;
-    border: 10px solid #ccc;
+    border: 10px solid #285ef1;
     border-radius: 100px;
     box-shadow: 10px 10px 10px rgba(11, 19, 94, 0.1);
+    background-color: #007bff;
   }
 
 

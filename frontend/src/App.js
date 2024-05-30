@@ -15,6 +15,7 @@ import Internships from "./pages/Internships";
 import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 
+
 function App() {
 	const role = localStorage.getItem("role");
 

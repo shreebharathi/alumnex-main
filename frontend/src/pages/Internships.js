@@ -144,7 +144,7 @@ const Internships = () => {
 				Cell: ({ row: { original } }) => (
 					<div className="d-flex flex-row justify-content-around">
 						<button
-							className="btn btn-primary btn-sm"
+							className="btn btn-primary btn"
 							onClick={() => {
 								setInternshipData(() => original);
 								setIsEditing(true);
@@ -154,7 +154,7 @@ const Internships = () => {
 							<i class="fa fa-pencil-square-o"></i>
 						</button>
 						<button
-							className="btn btn-danger btn-sm"
+							className="btn btn-danger btn"
 							onClick={() => {
 								handleDelete(original._id);
 							}}
