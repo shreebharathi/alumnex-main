@@ -10,23 +10,26 @@ function Sidebar() {
 			style={{ width: "280px", height: "100vh", backgroundColor: "#f8f9fa" }}
 		>
 			<ul className="nav nav-pills flex-column mb-auto">
-				<li className="nav-item">
-					<Link to="/admin/dashboard" className="nav-link" aria-current="page">
-						Dashboard
-					</Link>
-				</li>
-				{["Admin", "Staff"].includes(role) && (
+				{["Student", "Admin"].includes(role) && (
 					<>
 						<li className="nav-item">
-							<Link to="/admin/users" className="nav-link" aria-current="page">
-								Users
+							<Link
+								to="/admin/dashboard"
+								className="nav-link"
+								aria-current="page"
+							>
+								Dashboard
 							</Link>
 						</li>
-						<li>
-							<Link to="/admin/events" className="nav-link">
-								Events
-							</Link>
-						</li>
+					</>
+				)}
+				<li>
+					<Link to="/admin/events" className="nav-link">
+						Events
+					</Link>
+				</li>
+				{["Alumni", "Staff", "Admin"].includes(role) && (
+					<>
 						<li>
 							<Link to="/admin/newsletters" className="nav-link">
 								Newsletters
@@ -34,11 +37,23 @@ function Sidebar() {
 						</li>
 					</>
 				)}
-				<li>
-					<Link to="/admin/internships" className="nav-link">
-						Internships
-					</Link>
-				</li>
+
+				{["Admin", "Staff"].includes(role) && (
+					<>
+						<li className="nav-item">
+							<Link to="/admin/users" className="nav-link" aria-current="page">
+								Users
+							</Link>
+						</li>
+					</>
+				)}
+				{["Alumni", "Student", "Admin"].includes(role) && (
+					<li>
+						<Link to="/admin/internships" className="nav-link">
+							Internships
+						</Link>
+					</li>
+				)}
 			</ul>
 		</div>
 	);

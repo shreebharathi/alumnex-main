@@ -56,11 +56,11 @@ const Header = () => {
 						<span style={{ color: "white", marginRight: "20px" }}>
 							Hey {userProfile?.name || "there"}
 						</span>
-						{userProfile?.role !== "Student" && (
-							<Link to="/admin/dashboard" className="btn btn-outline-light">
-								Admin Panel
-							</Link>
-						)}
+
+						<Link to="/admin/dashboard" className="btn btn-outline-light">
+							Dashboard
+						</Link>
+
 						<button className="btn btn-outline-light" onClick={handleLogout}>
 							Logout
 						</button>
