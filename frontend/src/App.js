@@ -37,9 +37,9 @@ function App() {
 								}
 							/>
 
-							{["Admin"].includes(role) && (
+							{["Admin","Staff","Alumni","Student"].includes(role) && (
 								<Route path="admin">
-									{["Student", "Admin"].includes(role) && (
+									{["Student","Admin","Staff","Alumni"].includes(role) && (
 										<Route
 											path="dashboard"
 											element={
@@ -49,7 +49,7 @@ function App() {
 											}
 										/>
 									)}
-									{["Admin", "Student"].includes(role) && (
+									{["Admin", "Student","Staff","Alumni"].includes(role) && (
 										<Route
 											path="events"
 											element={
@@ -59,7 +59,7 @@ function App() {
 											}
 										/>
 									)}
-									{["User", "Admin"].includes(role) && (
+									{["User", "Admin","Staff","Alumni"].includes(role) && (
 										<Route
 											path="users"
 											element={
@@ -69,7 +69,7 @@ function App() {
 											}
 										/>
 									)}
-									{["Admin", "Staff", "Alumni"].includes(role) && (
+									{["Admin", "Staff", "Alumni", "Student"].includes(role) && (
 										<>
 											<Route
 												path="newsletters"
